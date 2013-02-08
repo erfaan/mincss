@@ -419,18 +419,7 @@ class Processor(object):
         return False
 
     def _make_absolute_url(self, url, href):
-        parsed = urlparse.urlparse(url)
-        if href.startswith('//'):
-            return parsed.scheme + ':' + href
-        if href.startswith('/'):
-            return parsed.scheme + '://' + parsed.netloc + href
-        if href.count('://'):
-            return href
-        path = parsed.path
-        parts = path.split('/')
-        parts[-1] = href
-        path = '/'.join(parts)
-        return parsed.scheme + '://' + parsed.netloc + path
+        return urlparse.urljoin(url, href)
 
 
 class _Result(object):
