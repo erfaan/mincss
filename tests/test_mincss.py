@@ -18,6 +18,8 @@ class TestMinCSS(unittest.TestCase):
     def test_just_inline(self):
         html = os.path.join(HERE, 'one.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
         # on line 7 there inline css starts
@@ -39,6 +41,8 @@ class TestMinCSS(unittest.TestCase):
     def test_just_one_link(self):
         html = os.path.join(HERE, 'two.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
         # two.html only has 1 link CSS ref
@@ -60,8 +64,12 @@ class TestMinCSS(unittest.TestCase):
     def test_one_link_two_different_pages(self):
         html = os.path.join(HERE, 'two.html')
         url1 = 'file://' + html
+        if os.name=='nt':
+            url1 = 'file:///' + html.replace('\\', '/')
         html_half = os.path.join(HERE, 'two_half.html')
         url2 = 'file://' + html_half
+        if os.name=='nt':
+            url2 = 'file:///' + html_half.replace('\\', '/')
         p = Processor()
         p.process(url1, url2)
         # two.html only has 1 link CSS ref
@@ -84,6 +92,8 @@ class TestMinCSS(unittest.TestCase):
     def test_pseudo_selectors_hell(self):
         html = os.path.join(HERE, 'three.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor(preserve_remote_urls=False)
         p.process(url)
         # two.html only has 1 link CSS ref
@@ -118,6 +128,8 @@ class TestMinCSS(unittest.TestCase):
     def test_media_query_simple(self):
         html = os.path.join(HERE, 'four.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
 
@@ -133,6 +145,8 @@ class TestMinCSS(unittest.TestCase):
     def test_double_classes(self):
         html = os.path.join(HERE, 'five.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
 
@@ -146,6 +160,8 @@ class TestMinCSS(unittest.TestCase):
     def test_complicated_keyframes(self):
         html = os.path.join(HERE, 'six.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
 
@@ -158,6 +174,8 @@ class TestMinCSS(unittest.TestCase):
     def test_ignore_annotations(self):
         html = os.path.join(HERE, 'seven.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
 
@@ -176,6 +194,8 @@ class TestMinCSS(unittest.TestCase):
     def test_non_ascii_html(self):
         html = os.path.join(HERE, 'eight.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor()
         p.process(url)
 
@@ -186,21 +206,29 @@ class TestMinCSS(unittest.TestCase):
     def test_preserve_remote_urls(self):
         html = os.path.join(HERE, 'nine.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor(preserve_remote_urls=True)
         p.process(url)
 
         after = p.links[0].after
         ok_("url('http://www.google.com/north.png')" in after)
         url = 'file://' + HERE + '/deeper/south.png'
+        if os.name=='nt':
+            url = 'file:///' + HERE.replace('\\', '/') + '/deeper/south.png'
         ok_('url("%s")' % url in after)
         # since local file URLs don't have a domain, this is actually expected
         ok_('url("file:///east.png")' in after)
         url = 'file://' + HERE + '/west.png'
+        if os.name=='nt':
+            url = 'file:///' + HERE.replace('\\', '/') + '/west.png'
         ok_('url("%s")' % url in after)
 
     def test_download_with_phantomjs(self):
         html = os.path.join(HERE, 'one.html')
         url = 'file://' + html
+        if os.name=='nt':
+            url = 'file:///' + html.replace('\\', '/')
         p = Processor(
             phantomjs=PHANTOMJS,
             phantomjs_options={'cookies-file': 'bla'}
